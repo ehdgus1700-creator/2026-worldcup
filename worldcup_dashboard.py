@@ -216,10 +216,10 @@ with tabs[2]:
                     # H조일 경우 특별 하이라이트
                     if g_name == "A조":
                         st.markdown(f"### 🔥 **{g_name}**")
-                        st.markdown(f"**1. 🇰🇷 {teams[0]}**")
-                        st.markdown(f"2. 🇨🇿 {teams[1]}")
-                        st.markdown(f"3. 🇲🇽 {teams[2]}")
-                        st.markdown(f"4. 🇿🇦 {teams[3]}")
+                        st.markdown(f"1. 🇲🇽 {teams[0]}")
+                        st.markdown(f"2. 🇿🇦 {teams[1]}")
+                        st.markdown(f"**3. 🇰🇷 {teams[2]}**")
+                        st.markdown(f"4. 🇨🇿 {teams[3]}")
                     else:
                         st.markdown(f"### {g_name}")
                         for i, team in enumerate(teams):
