@@ -14,7 +14,7 @@ st.sidebar.audio("2026_anthem.m4a", format="audio/m4a")
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("📺 라이브 중계 바로가기")
-st.sidebar.markdown("""[🔗 JTBC 스포츠 생중계](https://jtbc.co.kr/sports)
+st.sidebar.markdown("""[🔗 JTBC 스포츠 생중계](https://jtbc.co.kr/)
 
 [🔗 KBS 스포츠 생중계](https://sports.kbs.co.kr/)
 
