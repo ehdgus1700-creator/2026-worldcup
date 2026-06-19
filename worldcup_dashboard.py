@@ -8,25 +8,29 @@ import plotly.graph_objects as go
 st.set_page_config(page_title="2026 월드컵 대시보드 V2", page_icon="⚽", layout="wide")
 
 # 사이드바 BGM 플레이어
-st.sidebar.header("🎵 발표용 BGM 플레이어")
-st.sidebar.markdown("**2026 북중미 월드컵 공식 주제가**\n\nShakira & Burna Boy - Dai Dai (Official Song)")
+st.sidebar.header("🎵 2026 월드컵 공식 주제가")
+st.sidebar.markdown("**Shakira, Burna Boy – Dai Dai (Official Song)**")
 st.sidebar.audio("2026_anthem.m4a", format="audio/m4a")
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("📺 라이브 중계 바로가기")
-st.sidebar.markdown("[🔗 SBS 스포츠 생중계](https://sports.sbs.co.kr/)\n\n[🔗 MBC 스포츠 생중계](https://imnews.imbc.com/sports/)\n\n[🔗 KBS 스포츠 생중계](https://sports.kbs.co.kr/)\n\n[🔗 네이버 스포츠](https://sports.naver.com/)")
+st.sidebar.markdown("""[🔗 JTBC 스포츠 생중계](https://jtbc.co.kr/sports)
+
+[🔗 KBS 스포츠 생중계](https://sports.kbs.co.kr/)
+
+[🔗 네이버 치지직 (CHZZK)](https://chzzk.naver.com/)""")
 
 st.title("🏆 2026 북중미 월드컵 스페셜 대시보드 (PRO)")
 st.markdown("데이터 분석, 조별리그 풀 시뮬레이션, 토너먼트 대진표까지 결합된 궁극의 월드컵 대시보드입니다.")
 
 # 탭 생성 (7개 탭으로 구성)
 tabs = st.tabs([
-    "🌍 개최 도시 맵", 
-    "🇰🇷 조별리그 시뮬레이터", 
     "📋 48개국 조편성 (A~L조)",
+    "🇰🇷 조별리그 시뮬레이터",
+    "🌍 개최 도시 맵",
     "🏆 서바이벌 토너먼트",
-    "⭐ 선수 프로필 & 비교", 
-    "⏱️ 시차 변환기", 
+    "⭐ 선수 프로필 & 비교",
+    "⏱️ 시차 변환기",
     "📰 뉴스 & 퀴즈 예측",
     "📋 한국 스쿼드 & 전술",
     "🏟️ 드림팀 베스트 11"
@@ -35,7 +39,7 @@ tabs = st.tabs([
 # ==========================================
 # 1. 🌍 개최 도시 맵
 # ==========================================
-with tabs[0]:
+with tabs[2]:
     st.header("🌍 2026 북중미 3개국 16개 개최 도시 네트워크")
     st.markdown("결승전이 열리는 뉴욕/뉴저지를 중심으로 북중미 전역을 연결하는 거대한 월드컵 3D 네트워크입니다. (우클릭 드래그로 3D 회전 가능)")
     
@@ -66,6 +70,7 @@ with tabs[0]:
         # 1. 3D 기둥 레이어 (수용 인원에 비례한 높이)
         column_layer = pdk.Layer(
             'ColumnLayer',
+            id='city_layer',
             data=df_cities,
             get_position='[lon, lat]',
             get_elevation='[Stadium Capacity]',
@@ -99,11 +104,25 @@ with tabs[0]:
         
         # 지도 배경 박스 스타일링
         with st.container(border=True):
-            st.pydeck_chart(r, use_container_width=True)
+            event = st.pydeck_chart(r, use_container_width=True, on_select="rerun", selection_mode="single-object")
+            
+        selected_city_from_map = None
+        if event and event.selection and event.selection.objects:
+            if 'city_layer' in event.selection.objects and event.selection.objects['city_layer']:
+                selected_city_from_map = event.selection.objects['city_layer'][0]['City']
         
     with col_info:
         st.subheader("📍 프리미엄 경기장 뷰어")
-        selected_city = st.selectbox("탐색할 개최 도시를 선택하세요:", df_cities['City'])
+        
+        # 지도 클릭에 따른 기본값 연동
+        default_idx = 0
+        if selected_city_from_map:
+            try:
+                default_idx = int(df_cities[df_cities['City'] == selected_city_from_map].index[0])
+            except:
+                default_idx = 0
+
+        selected_city = st.selectbox("탐색할 개최 도시를 선택하세요 (지도 클릭 가능):", df_cities['City'], index=default_idx)
         city_info = df_cities[df_cities['City'] == selected_city].iloc[0]
         
         # 경기장 이미지 추가로 고급화
@@ -193,7 +212,7 @@ with tabs[1]:
 # ==========================================
 # 3. 📋 48개국 조편성 (A~L조)
 # ==========================================
-with tabs[2]:
+with tabs[0]:
     st.header("📋 2026 북중미 월드컵 48개국 본선 조편성")
     st.markdown("사상 최초로 48개국이 진출하는 이번 대회는 A조부터 L조까지 총 12개 조로 나뉘어 치러집니다.")
     
