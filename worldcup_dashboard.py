@@ -30,7 +30,6 @@ tabs = st.tabs([
     "🌍 개최 도시 맵",
     "🏆 서바이벌 토너먼트",
     "⭐ 선수 프로필 & 비교",
-    "⏱️ 시차 변환기",
     "📰 뉴스 & 퀴즈 예측",
     "📋 한국 스쿼드 & 전술",
     "🏟️ 드림팀 베스트 11"
@@ -379,40 +378,9 @@ with tabs[4]:
 
 
 # ==========================================
-# 6. ⏱️ 시차 변환기
+# 6. 📰 실시간 뉴스 & 이슈
 # ==========================================
 with tabs[5]:
-    st.header("⏱️ 개최 도시 - 한국 시차 변환기")
-    st.markdown("북중미 현지 경기 시간을 선택하면 한국 시간으로 직관적으로 변환해 줍니다.")
-    
-    from datetime import datetime, timedelta
-    
-    timezones = {
-        '미국 동부 및 캐나다 동부 (뉴욕, 마이애미, 필라델피아, 보스턴, 애틀랜타, 토론토)': -13,
-        '미국 중부 (댈러스, 휴스턴, 캔자스시티)': -14,
-        '멕시코 전역 (멕시코시티, 몬테레이, 과달라하라) - 서머타임 미적용': -15,
-        '미국 서부 및 캐나다 서부 (LA, 샌프란시스코, 시애틀, 밴쿠버)': -16
-    }
-    
-    col_tz1, col_tz2 = st.columns(2)
-    with col_tz1:
-        selected_tz = st.selectbox("개최 도시 권역 선택", list(timezones.keys()))
-        local_date = st.date_input("현지 경기 날짜", datetime(2026, 6, 17))
-        local_time = st.time_input("현지 경기 시간", datetime.strptime('20:00', '%H:%M').time())
-        
-    with col_tz2:
-        st.markdown("### 🇰🇷 한국 변환 시간")
-        diff_hours = timezones[selected_tz]
-        local_dt = datetime.combine(local_date, local_time)
-        kst_dt = local_dt + timedelta(hours=abs(diff_hours))
-        
-        st.success(f"**{kst_dt.strftime('%Y년 %m월 %d일 %p %I:%M')}**")
-        st.info(f"선택하신 현지 지역은 한국보다 {abs(diff_hours)}시간 느립니다.")
-
-# ==========================================
-# 7. 📰 실시간 뉴스 & 이슈
-# ==========================================
-with tabs[6]:
     st.header("📰 2026 월드컵 실시간 뉴스 피드")
     st.markdown("Google News RSS를 통해 가장 뜨거운 월드컵 최신 소식을 실시간으로 불러옵니다.")
     
@@ -494,7 +462,7 @@ with tabs[6]:
 # ==========================================
 # 8. 📋 한국 스쿼드 & 전술
 # ==========================================
-with tabs[7]:
+with tabs[6]:
     st.header("📋 2026 대한민국 국가대표팀 예상 스쿼드 및 전술")
     st.markdown("북중미 월드컵을 대비하는 대한민국의 예상 포메이션과 전술적 특징을 분석합니다.")
     
@@ -555,7 +523,7 @@ with tabs[7]:
 # ==========================================
 # 9. 🏟️ 드림팀 베스트 11 메이커
 # ==========================================
-with tabs[8]:
+with tabs[7]:
     st.header("🏟️ 2026 월드컵 나만의 다이내믹 드림팀 (Best 11) 빌더")
     st.markdown("포메이션을 자유롭게 변경하고 대한민국 실제 국가대표 엔트리로 드림팀을 구성해보세요.")
     
